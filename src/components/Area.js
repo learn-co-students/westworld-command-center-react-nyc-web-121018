@@ -21,10 +21,17 @@ class Area extends Component {
     this.props.tooManyHostsError(name, area);
   }
 
+  formatAreaName(dirtyName) {
+    return dirtyName
+      .split("_")
+      .map(word => word.charAt(0).toUpperCase() + word.slice(1))
+      .join(" ");
+  }
+
   render() {
     return (
       <div className="area" id={this.props.area.name}>
-        <h3 className="labels">{this.props.area.name}</h3>
+        <h3 className="labels">{this.formatAreaName(this.props.area.name)}</h3>
         <HostList
           selectHost={this.props.selectHost}
           hosts={this.filteredHosts()}

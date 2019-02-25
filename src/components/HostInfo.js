@@ -25,7 +25,8 @@ class HostInfo extends Component {
       { key: "pariah", text: "Pariah", value: "pariah" },
       { key: "python_pass", text: "Python Pass", value: "python_pass" },
       { key: "badlands", text: "Badlands", value: "badlands" }
-    ]
+    ],
+    location: this.props.host.location
   };
 
   handleChange = (e, { value }) => {
@@ -78,7 +79,7 @@ class HostInfo extends Component {
                 onChange={this.handleChange}
                 value={this.state.value}
                 options={this.state.options}
-                selection
+                selection={"hello"}
               />
             </Card.Content>
           </Card>
