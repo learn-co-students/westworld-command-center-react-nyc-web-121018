@@ -1,5 +1,7 @@
 import "../stylesheets/HostInfo.css";
 import React, { Component } from "react";
+import Log from "./Log";
+
 import {
   Radio,
   Icon,
@@ -30,11 +32,7 @@ class HostInfo extends Component {
     // the 'value' attribute is given via Semantic's Dropdown component.
     // Put a debugger in here and see what the "value" variable is when you pass in different options.
     // See the Semantic docs for more info: https://react.semantic-ui.com/modules/dropdown/#usage-controlled
-    console.log(
-      this.props.host.firstName,
-      "change location to the id of",
-      value
-    );
+    this.props.changeHostLocation(e, value);
   };
 
   toggle = () => {

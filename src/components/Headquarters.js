@@ -3,6 +3,7 @@ import "../stylesheets/Headquarters.css";
 import { Grid } from "semantic-ui-react";
 import Details from "./Details";
 import ColdStorage from "./ColdStorage";
+import LogPanel from "./LogPanel";
 
 class Headquarters extends Component {
   render() {
@@ -17,11 +18,16 @@ class Headquarters extends Component {
         <Grid.Column width={5}>
           <Details
             activateHost={this.props.activateHost}
+            changeHostLocation={this.props.changeHostLocation}
             details={this.props.details}
           />
         </Grid.Column>
         <Grid.Column width={3}>
-          {/* and here. Take visual cues from the screenshot/video in the Readme. */}
+          <LogPanel
+            activateAll={this.props.activateAll}
+            allActive={this.props.allActive}
+            logs={this.props.logs}
+          />
         </Grid.Column>
       </Grid>
     );

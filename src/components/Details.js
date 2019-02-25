@@ -10,6 +10,7 @@ class Details extends Component {
         {this.props.details.length > 0 ? (
           <HostInfo
             activateHost={this.props.activateHost}
+            changeHostLocation={this.props.changeHostLocation}
             host={this.props.details[0]}
           />
         ) : (
