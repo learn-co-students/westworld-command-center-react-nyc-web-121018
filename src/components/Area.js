@@ -1,25 +1,56 @@
-import React from 'react';
-import '../stylesheets/Area.css'
+import React, { Component } from "react";
+import "../stylesheets/Area.css";
+import HostList from "./HostList";
+import Log from "./Log";
+class Area extends Component {
+  filteredHosts = () => {
+    let result = this.props.hosts.filter(h => h.area == this.props.area.name);
+    if (result.length > this.props.area.limit) {
+      let rejectedHost = result[result.length - 1];
+      rejectedHost.active = false;
+      this.errorMessage(rejectedHost.firstName, this.props.area);
+      result.pop();
 
-const Area = () => (
-
-  <div className='area' id={/* Pass in the area name here to make sure this is styled correctly */}>
-    <h3 className='labels'>{/* Don't just pass in the name from the data...clean that thing up */}</h3>
-
-    {/* See Checkpoint 1 item 2 in the Readme for a clue as to what goes here */}
-
-  </div>
-
-)
-
-Area.propTypes = {
-  hosts: function(props, propName, componentName){
-    if(props.hosts.length > props.limit){
-      throw Error(
-        `HEY!! You got too many hosts in ${props.name}. The limit for that area is ${props.limit}. You gotta fix that!`
-      )
+      return result;
     }
+
+    return result;
+  };
+
+  errorMessage(name, area) {
+    this.props.tooManyHostsError(name, area);
+  }
+
+  formatAreaName(dirtyName) {
+    return dirtyName
+      .split("_")
+      .map(word => word.charAt(0).toUpperCase() + word.slice(1))
+      .join(" ");
+  }
+
+  render() {
+    return (
+      <div className="area" id={this.props.area.name}>
+        <h3 className="labels">{this.formatAreaName(this.props.area.name)}</h3>
+        <HostList
+          selectHost={this.props.selectHost}
+          hosts={this.filteredHosts()}
+        />
+      </div>
+    );
   }
 }
+
+Area.propTypes = {
+  hosts: function(props, propName, componentName) {
+    if (props.hosts.length > props.limit) {
+      throw Error(
+        `HEY!! You got too many hosts in ${
+          props.name
+        }. The limit for that area is ${props.limit}. You gotta fix that!`
+      );
+    }
+  }
+};
 
 export default Area;
