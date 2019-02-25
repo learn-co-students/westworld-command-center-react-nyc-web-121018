@@ -1,19 +1,23 @@
-import React from 'react'
-import { Segment, Image } from 'semantic-ui-react'
-import * as Images from '../services/Images'
+import React, { Component } from "react";
+import { Segment, Image } from "semantic-ui-react";
+import * as Images from "../services/Images";
+import HostInfo from "./HostInfo";
 
+class Details extends Component {
+  render() {
+    return (
+      <Segment id="details" className="HQComps">
+        {this.props.details.length > 0 ? (
+          <HostInfo
+            activateHost={this.props.activateHost}
+            host={this.props.details[0]}
+          />
+        ) : (
+          <Image size="medium" src={Images.westworldLogo} />
+        )}
+      </Segment>
+    );
+  }
+} // end of class
 
-const Details = () => {
-  // We'll render the logo if no host is selected. But if a host does get selected....
-  // Watch the video to see how this works in the app.
-
-  const renderSomething = () => (<Image size='medium' src={Images.westworldLogo}/>)
-
-  return(
-    <Segment id="details" className="HQComps">
-      {renderSomething()}
-    </Segment>
-  )
-}
-
-export default Details
+export default Details;

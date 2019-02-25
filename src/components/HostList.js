@@ -1,13 +1,22 @@
-import React from 'react'
-import { Card } from 'semantic-ui-react'
+import React, { Component } from "react";
+import { Card } from "semantic-ui-react";
 
-const HostList = () => {
-
-  return(
-    <Card.Group itemsPerRow={6}>
-      {/* What do you think, partner? */}
-    </Card.Group>
-  )
+class HostList extends Component {
+  render() {
+    return (
+      <Card.Group itemsPerRow={6}>
+        {this.props.hosts.map(h => (
+          <div className="ui tiny image">
+            <img
+              data-id={h.id}
+              onClick={this.props.selectHost}
+              src={h.imageUrl}
+            />
+          </div>
+        ))}
+      </Card.Group>
+    );
+  }
 }
 
-export default HostList
+export default HostList;
