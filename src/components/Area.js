@@ -1,12 +1,25 @@
 import React, { Component } from "react";
 import "../stylesheets/Area.css";
 import HostList from "./HostList";
-
+import Log from "./Log";
 class Area extends Component {
   filteredHosts = () => {
     let result = this.props.hosts.filter(h => h.area == this.props.area.name);
+    if (result.length > this.props.area.limit) {
+      let rejectedHost = result[result.length - 1];
+      rejectedHost.active = false;
+      this.errorMessage(rejectedHost.firstName, this.props.area);
+      result.pop();
+
+      return result;
+    }
+
     return result;
   };
+
+  errorMessage(name, area) {
+    this.props.tooManyHostsError(name, area);
+  }
 
   render() {
     return (

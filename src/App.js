@@ -19,11 +19,18 @@ class App extends Component {
 
   activateHost = () => {
     let detailsCopy = [...this.state.details];
-    detailsCopy[0].active === false
-      ? (detailsCopy[0].active = true)
-      : (detailsCopy[0].active = false);
+
+    if (detailsCopy[0].active === false) {
+      detailsCopy[0].active = true;
+      this.createLogMessage(`activated ${detailsCopy[0].firstName}`, "notify");
+    } else {
+      detailsCopy[0].active = false;
+      this.createLogMessage(
+        `deactivated ${detailsCopy[0].firstName}`,
+        "notify"
+      );
+    }
     this.setState({ details: detailsCopy });
-    this.createLogMessage(`activating ${detailsCopy[0].firstName}`, "notify");
   };
 
   createLogMessage = (message, tone) => {
@@ -47,6 +54,12 @@ class App extends Component {
     let detailsCopy = [...this.state.details];
     detailsCopy[0].area = value;
     this.setState({ details: detailsCopy });
+    this.createLogMessage(
+      `changed location of ${detailsCopy[0].firstName} to ${
+        detailsCopy[0].area
+      }`,
+      "notify"
+    );
   };
 
   constructor() {
@@ -73,6 +86,16 @@ class App extends Component {
     } else {
       this.setState({ allActive: false });
     }
+  };
+
+  tooManyHostsError = (name, area) => {
+    console.log(name, area);
+    this.createLogMessage(
+      `Could not add ${name} to ${
+        area.name
+      } as it would exceed the maximum of ${area.limit} hosts`,
+      "error"
+    );
   };
 
   activateAll = () => {
@@ -107,6 +130,7 @@ class App extends Component {
           selectHost={this.selectHost}
           hosts={this.state.hosts}
           areas={this.state.areas}
+          tooManyHostsError={this.tooManyHostsError}
         />
         <Headquarters
           details={this.state.details}

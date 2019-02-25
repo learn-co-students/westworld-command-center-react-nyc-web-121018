@@ -16,6 +16,7 @@ class WestworldMap extends Component {
             selectHost={this.props.selectHost}
             hosts={this.filteredHosts()}
             area={a}
+            tooManyHostsError={this.props.tooManyHostsError}
           />
         ))}
       </Segment>
