@@ -1,39 +1,106 @@
-import '../stylesheets/HostInfo.css'
-import React, { Component } from 'react'
-import { Radio, Icon, Card, Grid, Image, Dropdown, Divider } from 'semantic-ui-react'
+import "../stylesheets/HostInfo.css";
+import React, { Component } from "react";
+import {
+  Radio,
+  Icon,
+  Card,
+  Grid,
+  Image,
+  Dropdown,
+  Divider
+} from "semantic-ui-react";
 
+// area limits for all areas to prevent too many hosts in one area
+const limits = {
+  high_plains: 8,
+  lowlands: 6,
+  under_construction: 8,
+  pariah: 14,
+  python_pass: 14,
+  badlands: 10
+};
 
 class HostInfo extends Component {
-  state = {
-    options: [{key: "some_area" text: "Some Area" value: "some_area"}, {key: "another_area" text: "Another Area" value: "another_area"}],
-    value: "some_area",
-    // This state is just to show how the dropdown component works.
-    // Options have to be formatted in this way (array of objects with keys of: key, text, value)
-    // Value has to match the value in the object to render the right text.
+  constructor(props) {
+    super(props);
 
-    // IMPORTANT: But whether it should be stateful or not is entirely up to you. Change this component however you like.
+    // state holds all options that will be displayed dropdown menu when changing a host's area
+    this.state = {
+      options: [
+        { key: "high_plains", text: "High Plains", value: "high_plains" },
+        { key: "lowlands", text: "Lowlands", value: "lowlands" },
+        {
+          key: "under_construction",
+          text: "Under Construction",
+          value: "under_construction"
+        },
+        { key: "pariah", text: "Pariah", value: "pariah" },
+        { key: "python_pass", text: "Python Pass", value: "python_pass" },
+        { key: "badlands", text: "Badlands", value: "badlands" }
+      ]
+    };
   }
 
+  // function that is called when a hosts area is changed
+  handleChange = (e, { value }) => {
+    // Clean names for all areas to be used to display on the LogPanel
+    let names = {
+      high_plains: "High Plains",
+      lowlands: "Lowlands",
+      under_construction: "Under Construction",
+      pariah: "Pariah",
+      python_pass: "Python Pass",
+      badlands: "Badlands"
+    };
 
-
-  handleChange = (e, {value}) => {
-    // the 'value' attribute is given via Semantic's Dropdown component.
-    // Put a debugger in here and see what the "value" variable is when you pass in different options.
-    // See the Semantic docs for more info: https://react.semantic-ui.com/modules/dropdown/#usage-controlled
-  }
+    // if there are less hosts in an area then allowed, allow host to be moved
+    if (this.props.currentCount[value] < limits[value]) {
+      // callback from App to change a host location
+      this.props.changeLocation(this.props.host[0].id, value);
+      // Log this move on the LogPanel
+      this.props.addLogItem({
+        key: "notify",
+        message: `${this.props.host[0].firstName} set in area  ${names[value]}.`
+      });
+    } else {
+      // Log move failure on the LogPanel
+      this.props.addLogItem({
+        key: "error",
+        message: `Too many hosts. Cannot add ${
+          this.props.host[0].firstName
+        } to ${names[value]}.`
+      });
+    }
+  };
 
   toggle = () => {
-    console.log("The radio button fired");
-  }
+    // toggle host active status boolean
+    this.props.changeActiveStatus(this.props.host[0].id);
 
-  render(){
+    // conditionally log to LogPanel the appropriate message based on boolean
+    if (this.props.host[0].active === false) {
+      this.props.addLogItem({
+        key: "warn",
+        message: `Activated ${this.props.host[0].firstName}.`
+      });
+    } else {
+      this.props.addLogItem({
+        key: "notify",
+        message: `Decommissioned ${this.props.host[0].firstName}.`
+      });
+    }
+  };
+
+  render() {
+    const currentHost = this.props.host[0];
+
     return (
       <Grid>
         <Grid.Column width={6}>
           <Image
-            src={ /* pass in the right image here */ }
-            floated='left'
-            size='small'
+            src={currentHost.imageUrl}
+            floated="left"
+            size="small"
             className="hostImg"
           />
         </Grid.Column>
@@ -41,25 +108,28 @@ class HostInfo extends Component {
           <Card>
             <Card.Content>
               <Card.Header>
-                {"Bob"} | { true ? <Icon name='man' /> : <Icon name='woman' />}
-                { /* Think about how the above should work to conditionally render the right First Name and the right gender Icon */ }
+                {currentHost.firstName} |{" "}
+                {currentHost.gender === "Male" ? (
+                  <Icon name="man" />
+                ) : (
+                  <Icon name="woman" />
+                )}
               </Card.Header>
               <Card.Meta>
                 <Radio
                   onChange={this.toggle}
-                  label={"Active"}
-                  {/* Sometimes the label should take "Decommissioned". How are we going to conditionally render that? */}
-                  checked={true}
-                  {/* Checked takes a boolean and determines what position the switch is in. Should it always be true? */}
+                  label={
+                    this.props.host[0].active ? "Active" : "Decommissioned"
+                  }
+                  checked={this.props.host[0].active}
                   slider
                 />
               </Card.Meta>
-
               <Divider />
               Current Area:
               <Dropdown
                 onChange={this.handleChange}
-                value={this.state.value}
+                value={this.props.host[0].area}
                 options={this.state.options}
                 selection
               />
@@ -67,8 +137,8 @@ class HostInfo extends Component {
           </Card>
         </Grid.Column>
       </Grid>
-    )
+    );
   }
 }
 
-export default HostInfo
+export default HostInfo;

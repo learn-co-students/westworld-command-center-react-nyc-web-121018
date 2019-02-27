@@ -1,18 +1,26 @@
-import React from 'react';
-import '../stylesheets/Host.css'
-import { Card } from 'semantic-ui-react'
+import React from "react";
+import "../stylesheets/Host.css";
+import { Card } from "semantic-ui-react";
 
-const Host = () => {
+const Host = props => {
+  //callback to set App state selected equale to the name of the host that was clicked on
+  function setSelectedHost() {
+    props.selectedHost(props.host.firstName);
+  }
 
-  return(
+  return (
     <Card
-      className="host selected"
-      {/* NOTE: The className "host selected" renders a different style than simply "host". */}
-      onClick={ /* On Click what? */}
-      image={/* I wonder what goes here...*/}
+      className={
+        props.host.firstName === props.selected
+          ? "a ui card host selected"
+          : "a ui card host"
+      }
+      /* NOTE: The className "host selected" renders a different style than simply "host". */
+      onClick={setSelectedHost}
+      image={props.host.imageUrl}
       raised
     />
-  )
-}
+  );
+};
 
-export default Host
+export default Host;

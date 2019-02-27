@@ -1,13 +1,9 @@
-import React from 'react'
-import { Card } from 'semantic-ui-react'
+import React from "react";
+import { Card } from "semantic-ui-react";
 
-const HostList = () => {
+const HostList = props => {
+  //               items based on size of area   filtered hosts to display
+  return <Card.Group itemsPerRow={props.number}>{props.display}</Card.Group>;
+};
 
-  return(
-    <Card.Group itemsPerRow={6}>
-      {/* What do you think, partner? */}
-    </Card.Group>
-  )
-}
-
-export default HostList
+export default HostList;
